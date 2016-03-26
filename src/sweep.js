@@ -1,16 +1,10 @@
 import NodeGit from 'nodegit';
 
-/*
- * 1. Open repo
- * 2. Fetch all from origin
- * 3. Prune branches
- * 4. Find all remote branches
- * 5. Filter with criteria (age, name, exemption)
- * 6. Ask confirmation
- * 7. Delete
- */
+function isIgnored(ref, ignoreList) {
+  return ignoreList.includes(ref.replace(/^refs\/remotes\//, ''));
+}
 
-async function sweep({path, remote, preview}) {
+async function sweep({path, remote, preview, ignore}) {
   try {
     const repo = await NodeGit.Repository.open(path);
     await repo.fetch(remote, {
@@ -21,12 +15,12 @@ async function sweep({path, remote, preview}) {
     const sweepRefs = [];
 
     for (const ref of refNames) {
-      if (ref.match(`refs/remotes/${remote}`) && !/master/.test(ref)) {
+      if (ref.startsWith(`refs/remotes/${remote}`) && !isIgnored(ref, ignore)) {
         console.log(`- ${ref}`);
         sweepRefs.push(`:${ref.replace(`remotes/${remote}`, 'heads')}`);
       }
     }
-    
+
     if (sweepRefs.length < 1) {
       console.log('No matching remote branch to sweep');
       return;
@@ -35,7 +29,7 @@ async function sweep({path, remote, preview}) {
     if (!preview) {
       const theRemote = await repo.getRemote(remote);
       theRemote.push(sweepRefs);
-      
+
       console.log(`${sweepRefs.length} branches removed`);
     }
   } catch (e) {
