@@ -57,8 +57,10 @@ async function sweep({repoPath, remote, preview, ignore, age}) {
     if (sweepRefs.length < 1) {
       console.log('No matching remote branch to sweep');
       return;
-    } else {
+    } else if (!!cutoffMoment) {
       console.log(`${sweepRefs.length} branch found with last commit before ${cutoffMoment.toString()}`);
+    } else {
+      console.log(`${sweepRefs.length} branch found`);
     }
 
     if (!preview) {

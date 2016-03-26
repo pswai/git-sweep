@@ -1,19 +1,22 @@
 {
   "name": "git-sweep",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Clean up remote branches for git repo",
   "main": "lib/index.js",
+  "keywords": [
+    "git",
+    "clean",
+    "remote"
+  ],
+  "bin": {
+    "git-sweep": "bin/git-sweep"
+  },
   "dependencies": {
     "babel-polyfill": "^6.7.4",
     "minimist": "^1.2.0",
     "moment": "^2.12.0",
     "nodegit": "^0.11.9"
   },
-  "keywords": [
-    "git",
-    "clean",
-    "remote"
-  ],
   "devDependencies": {
     "babel-cli": "^6.6.5",
     "babel-core": "^6.7.4",
