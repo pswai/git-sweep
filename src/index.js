@@ -7,7 +7,8 @@ const args = minimist(process.argv.slice(2), {
     path: '.',
     remote: 'origin',
     preview: false,
-    ignore: ''
+    ignore: 'origin/master',
+    age: '1m'
   },
   string: ['path', 'remote', 'ignore', 'age'],
   boolean: ['preview']
