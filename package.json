@@ -4,9 +4,10 @@
   "description": "Clean up remote branches for git repo",
   "main": "lib/index.js",
   "dependencies": {
+    "babel-polyfill": "^6.7.4",
     "minimist": "^1.2.0",
-    "nodegit": "^0.11.9",
-    "babel-polyfill": "^6.7.4"
+    "moment": "^2.12.0",
+    "nodegit": "^0.11.9"
   },
   "keywords": [
     "git",

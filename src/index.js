@@ -9,7 +9,7 @@ const args = minimist(process.argv.slice(2), {
     preview: false,
     ignore: ''
   },
-  string: ['path', 'remote', 'ignore'],
+  string: ['path', 'remote', 'ignore', 'age'],
   boolean: ['preview']
 });
 
@@ -17,5 +17,6 @@ sweep({
   repoPath: args.path,
   remote: args.remote,
   preview: args.preview,
-  ignore: args.ignore.split(',')
+  ignore: args.ignore.split(','),
+  age: args.age
 });

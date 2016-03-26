@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import moment from 'moment';
 import NodeGit from 'nodegit';
 
 function getConfiguredIgnoresIfExist(repoPath) {
@@ -18,8 +19,18 @@ function isIgnored(ref, ignoreList) {
   return ignoreList.includes(ref.replace(/^refs\/remotes\//, ''));
 }
 
-async function sweep({repoPath, remote, preview, ignore}) {
+function getCutoffMoment(age) {
+  const [, year, month, day] = age.match(/(?:(\d+)y)?(?:(\d+)m)?(?:(\d+)d)?/);
+  
+  return moment()
+    .subtract(year, 'years')
+    .subtract(month, 'months')
+    .subtract(day, 'days');
+}
+
+async function sweep({repoPath, remote, preview, ignore, age}) {
   try {
+    const cutoffMoment = age ? getCutoffMoment(age) : null;
     const ignoreList = await getConfiguredIgnoresIfExist(repoPath);
     ignoreList.push(...ignore);
 
@@ -33,21 +44,28 @@ async function sweep({repoPath, remote, preview, ignore}) {
 
     for (const ref of refNames) {
       if (ref.startsWith(`refs/remotes/${remote}`) && !isIgnored(ref, ignoreList)) {
-        console.log(`- ${ref}`);
-        sweepRefs.push(`:${ref.replace(`remotes/${remote}`, 'heads')}`);
+        const commit = await repo.getReferenceCommit(ref);
+        const commitMoment = moment(commit.date());
+
+        if (!cutoffMoment || commitMoment.isBefore(cutoffMoment)) {
+          console.log(`- ${ref}\t${commitMoment.fromNow()}`);
+          sweepRefs.push(`:${ref.replace(`remotes/${remote}`, 'heads')}`);
+        }
       }
     }
 
     if (sweepRefs.length < 1) {
       console.log('No matching remote branch to sweep');
       return;
+    } else {
+      console.log(`${sweepRefs.length} branch found with last commit before ${cutoffMoment.toString()}`);
     }
 
     if (!preview) {
       const theRemote = await repo.getRemote(remote);
       theRemote.push(sweepRefs);
 
-      console.log(`${sweepRefs.length} branches removed`);
+      console.log(`${sweepRefs.length} branch removed`);
     }
   } catch (e) {
     console.error(e.message);
