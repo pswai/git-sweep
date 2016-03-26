@@ -76,7 +76,8 @@ git-sweep --preview
 
 
 ### Config file
-A `.gitsweepignore` can be added to configure the `ignore` option
+A `.gitsweepignore` can be added to configure the `ignore` option.
+When used together with `--ignore`, their entries will be merged.
 
 
 ### License
