@@ -80,4 +80,4 @@ A `.gitsweepignore` can be added to configure the `ignore` option
 
 
 ### License
-MIT
+[MIT](LICENSE)
