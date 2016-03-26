@@ -14,7 +14,7 @@ const args = minimist(process.argv.slice(2), {
 });
 
 sweep({
-  path: args.path,
+  repoPath: args.path,
   remote: args.remote,
   preview: args.preview,
   ignore: args.ignore.split(',')
