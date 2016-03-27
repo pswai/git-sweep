@@ -29,7 +29,7 @@ function getCutoffMoment(age) {
 }
 
 async function sweep({
-  repoPath = '.',
+  path = '.',
   remote = 'origin',
   preview = false,
   ignore = 'origin/master',
@@ -37,10 +37,10 @@ async function sweep({
 }) {
   try {
     const cutoffMoment = age ? getCutoffMoment(age) : null;
-    const ignoreList = await getConfiguredIgnoresIfExist(repoPath);
+    const ignoreList = await getConfiguredIgnoresIfExist(path);
     ignoreList.push(...ignore);
 
-    const repo = await NodeGit.Repository.open(repoPath);
+    const repo = await NodeGit.Repository.open(path);
 
     let triedAuth = false;
     await repo.fetch(remote, {
