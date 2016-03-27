@@ -84,6 +84,18 @@ When used together with `--ignore`, their entries will be merged.
 `git-sweep` currently supports `ssh-agent` only.
 
 
+### Roadmap
+- Authentication methods
+  - username/password
+  - HTTPS
+  - github 2FA
+  - Manual ssh key files
+- Filters
+  - Merged branch
+  - Cutoff date (similar to age)
+- CLI help
+
+
 ### License
 [MIT](LICENSE)
 
