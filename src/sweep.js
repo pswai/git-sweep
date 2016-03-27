@@ -36,6 +36,12 @@ async function sweep({repoPath, remote, preview, ignore, age}) {
 
     const repo = await NodeGit.Repository.open(repoPath);
     await repo.fetch(remote, {
+      callbacks: {
+        certificateCheck: function() { return 1; },
+        credentials: function(url, username) {
+          return NodeGit.Cred.sshKeyFromAgent(username);
+        }
+      },
       prune: NodeGit.Fetch.PRUNE.GIT_FETCH_PRUNE
     });
 

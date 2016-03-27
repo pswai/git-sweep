@@ -80,5 +80,9 @@ A `.gitsweepignore` can be added to configure the `ignore` option.
 When used together with `--ignore`, their entries will be merged.
 
 
+### Authentication
+`git-sweep` currently supports `ssh-agent` only.
+
+
 ### License
 [MIT](LICENSE)
