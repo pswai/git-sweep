@@ -86,3 +86,12 @@ When used together with `--ignore`, their entries will be merged.
 
 ### License
 [MIT](LICENSE)
+
+
+### Changelog
+
+#### v0.1.1
+- Add support to authenticate using `ssh-agent`
+
+#### v0.1.0
+- First release
