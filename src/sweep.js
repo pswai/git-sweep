@@ -28,7 +28,13 @@ function getCutoffMoment(age) {
     .subtract(day, 'days');
 }
 
-async function sweep({repoPath, remote, preview, ignore, age}) {
+async function sweep({
+  repoPath = '.',
+  remote = 'origin',
+  preview = false,
+  ignore = 'origin/master',
+  age = '1m'
+}) {
   try {
     const cutoffMoment = age ? getCutoffMoment(age) : null;
     const ignoreList = await getConfiguredIgnoresIfExist(repoPath);
