@@ -1,4 +1,4 @@
-git-sweep
+git-sweep [![npm version](https://badge.fury.io/js/git-sweep.svg)](https://badge.fury.io/js/git-sweep)
 ---------
 > Git utility to clean up remote branches
 
