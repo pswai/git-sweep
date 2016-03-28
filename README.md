@@ -46,6 +46,10 @@ Default: `1m`
 
 Minimum age for a branch to be considered for deletion. Format `1y2m3d` means "older than 1 year 2 months and 3 days".
 
+#### password
+
+Type: `Boolean`
+
 
 ### Example Usage
 
@@ -72,7 +76,6 @@ git-sweep --remote fork
 #### Dry run
 ```
 git-sweep --preview
-```
 
 
 ### Config file
@@ -86,14 +89,14 @@ When used together with `--ignore`, their entries will be merged.
 
 ### Roadmap
 - Authentication methods
-  - username/password
+  - [x] username/password
   - HTTPS
   - github 2FA
   - Manual ssh key files
 - Filters
   - Merged branch
   - Cutoff date (similar to age)
-- CLI help
+- [x] CLI help
 
 
 ### License

@@ -33,7 +33,8 @@ async function sweep({
   remote = 'origin',
   preview = false,
   ignore = 'origin/master',
-  age = '1m'
+  age = '1m',
+  password
 }) {
   try {
     const cutoffMoment = age ? getCutoffMoment(age) : null;
@@ -42,13 +43,22 @@ async function sweep({
 
     const repo = await NodeGit.Repository.open(path);
 
-    let triedAuth = false;
+    const authTrials = {
+      agent: false,
+      userpassPlaintext: false
+    };
     await repo.fetch(remote, {
       callbacks: {
         certificateCheck: function() { return 1; },
         credentials: function(url, username) {
-          if (!triedAuth) {
-            triedAuth = true;
+          // Do not try ssh-agent if password is specified
+          if (password) {
+            if (!authTrials.userpassPlaintext) {
+              authTrials.userpassPlaintext = true;
+              return NodeGit.Cred.userpassPlaintextNew(username, password);
+            }
+          } else if (!authTrials.agent) {
+            authTrials.agent = true;
             return NodeGit.Cred.sshKeyFromAgent(username);
           }
         }

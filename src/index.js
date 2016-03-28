@@ -1,9 +1,10 @@
 import 'babel-polyfill';
 import program from 'commander';
+import readlineSync from 'readline-sync';
 import sweep from './sweep';
 import pkg from '../package.json';
 
-const args = program
+program
   .version(pkg.version)
   .option('--path [path]', 'Path to target git repository')
   .option('--remote [remote]', 'Target remote to clean up')
@@ -26,12 +27,28 @@ const args = program
       'Run `git-sweep` without actually deleting any branch.',
       'Useful for verifying the list of branches that will be deleted'
     ].join(' '))
+  .option('--password', 'Use password to authenticate instead of SSH key (Input later)')
   .parse(process.argv);
 
-sweep({
-  path: args.path,
-  remote: args.remote,
-  preview: args.preview,
-  ignore: args.ignore,
-  age: args.age
-});
+function run(args) {
+  sweep({
+    path: args.path,
+    remote: args.remote,
+    preview: args.preview,
+    ignore: args.ignore,
+    age: args.age,
+    password: args.password
+  });
+}
+
+if (program.password) {
+  const password = readlineSync.question('Enter your git password: ', {
+    hideEchoBack: true,
+    mask: ''
+  });
+  run(Object.assign({}, program, {
+    password: password
+  }))
+} else {
+  run(program);
+}
