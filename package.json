@@ -36,8 +36,8 @@
     "url": "git@github.com:pswai/git-sweep.git"
   },
   "scripts": {
-    "build": "$(npm bin)/babel src --out-dir lib",
-    "prepublish": "$(npm bin)/rimraf lib && npm run build"
+    "build": "./node_modules/.bin/babel src --out-dir lib",
+    "prepublish": "./node_modules/.bin/rimraf lib && npm run build"
   },
   "author": "Wai Park Soon <parksoon_my@hotmail.com>",
   "license": "MIT"
