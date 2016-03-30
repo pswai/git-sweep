@@ -91,8 +91,29 @@ async function sweep({
     }
 
     if (!preview) {
+      const authTrials = {
+        agent: false,
+        userpassPlaintext: false
+      };
+
       const theRemote = await repo.getRemote(remote);
-      theRemote.push(sweepRefs);
+      await theRemote.push(sweepRefs, {
+        callbacks: {
+          certificateCheck: function() { return 1; },
+          credentials: function(url, username) {
+            // Do not try ssh-agent if password is specified
+            if (password) {
+              if (!authTrials.userpassPlaintext) {
+                authTrials.userpassPlaintext = true;
+                return NodeGit.Cred.userpassPlaintextNew(username, password);
+              }
+            } else if (!authTrials.agent) {
+              authTrials.agent = true;
+              return NodeGit.Cred.sshKeyFromAgent(username);
+            }
+          }
+        }
+      });
 
       console.log(`${sweepRefs.length} branch removed`);
     }
