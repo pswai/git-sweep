@@ -105,6 +105,10 @@ When used together with `--ignore`, their entries will be merged.
 
 ### Changelog
 
+#### v0.1.2
+- Add support to authenticate using password
+- Add CLI help
+
 #### v0.1.1
 - Add support to authenticate using `ssh-agent`
 
