@@ -76,6 +76,7 @@ git-sweep --remote fork
 #### Dry run
 ```
 git-sweep --preview
+```
 
 
 ### Config file
