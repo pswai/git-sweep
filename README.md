@@ -106,6 +106,9 @@ When used together with `--ignore`, their entries will be merged.
 
 ### Changelog
 
+#### v0.1.3
+- Fix missing auth callbacks when actual push
+
 #### v0.1.2
 - Add support to authenticate using password
 - Add CLI help

@@ -1,6 +1,6 @@
 {
   "name": "git-sweep",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Clean up remote branches for git repo",
   "main": "lib/sweep.js",
   "keywords": [
