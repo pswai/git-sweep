@@ -13,13 +13,13 @@ npm install -g git-sweep
 #### path
 
 Type: `String`
-Default: `.`
 
 Path to target git repository.
 
 #### remote
 
 Type: `String`
+
 Default: `origin`
 
 Target remote to clean up.
@@ -27,6 +27,7 @@ Target remote to clean up.
 #### ignore
 
 Type: `String`
+
 Default: `origin/master`
 
 Branches to be ignored. Must be specified in `<remote>/<branch>` format. Use comma to delimit multiple branches.
@@ -35,6 +36,7 @@ This option will be merged with the configuration in [`.gitsweepignore`](#config
 #### preview
 
 Type: `Boolean`
+
 Default: `false`
 
 Run `git-sweep` without actually deleting any branch. Useful for verifying the list of branches that will be deleted.
@@ -42,6 +44,7 @@ Run `git-sweep` without actually deleting any branch. Useful for verifying the l
 #### age
 
 Type: `String`
+
 Default: `1m`
 
 Minimum age for a branch to be considered for deletion. Format `1y2m3d` means "older than 1 year 2 months and 3 days".
@@ -55,27 +58,27 @@ Type: `Boolean`
 
 #### Delete remote branches that are older than 1 month except `origin/master`
 ```
-git-sweep
+git-sweep /path/to/repo
 ```
 
 #### Delete older than 1 year, 2 month and 3 days
 ```
-git-sweep --age 1y2m3d
+git-sweep /path/to/repo --age 1y2m3d
 ```
 
 #### Delete except `origin/master` and `origin/dev`
 ```
-git-sweep --ignore origin/master,origin/dev
+git-sweep /path/to/repo --ignore origin/master,origin/dev
 ```
 
 #### Delete from another remote
 ```
-git-sweep --remote fork
+git-sweep /path/to/repo --remote fork
 ```
 
 #### Dry run
 ```
-git-sweep --preview
+git-sweep /path/to/repo --preview
 ```
 
 
@@ -105,6 +108,10 @@ When used together with `--ignore`, their entries will be merged.
 
 
 ### Changelog
+
+#### v0.2.0
+- Fix EOL issue in OS X
+- Changed `path` to be mandatory
 
 #### v0.1.3
 - Fix missing auth callbacks when actual push
