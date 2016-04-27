@@ -29,13 +29,17 @@ function getCutoffMoment(age) {
 }
 
 async function sweep({
-  path = '.',
+  path,
   remote = 'origin',
   preview = false,
   ignore = 'origin/master',
   age = '1m',
   password
 }) {
+  if (!path) {
+    throw new Error('Path is required');
+  }
+  
   try {
     const cutoffMoment = age ? getCutoffMoment(age) : null;
     const ignoreList = await getConfiguredIgnoresIfExist(path);

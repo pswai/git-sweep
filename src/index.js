@@ -1,12 +1,17 @@
 import 'babel-polyfill';
-import program from 'commander';
+import {Command} from 'commander';
 import readlineSync from 'readline-sync';
 import sweep from './sweep';
 import pkg from '../package.json';
 
+const program = new Command('git-sweep');
+
+let path; // deployed later
+
 program
   .version(pkg.version)
-  .option('--path [path]', 'Path to target git repository')
+  .arguments('<path>')
+  .action(pathValue => { path = pathValue; })
   .option('--remote [remote]', 'Target remote to clean up')
   .option(
     '--ignore [branches]',
@@ -32,7 +37,7 @@ program
 
 function run(args) {
   sweep({
-    path: args.path,
+    path: path,
     remote: args.remote,
     preview: args.preview,
     ignore: args.ignore,
@@ -41,7 +46,9 @@ function run(args) {
   });
 }
 
-if (program.password) {
+if (!path) {
+  program.help();
+} else if (program.password) {
   const password = readlineSync.question('Enter your git password: ', {
     hideEchoBack: true,
     mask: ''
