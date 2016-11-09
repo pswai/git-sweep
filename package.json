@@ -28,7 +28,9 @@
   "devDependencies": {
     "babel-cli": "^6.22.2",
     "babel-core": "^6.22.1",
+    "babel-jest": "^18.0.0",
     "babel-preset-env": "^1.1.8",
+    "jest": "^18.1.0",
     "rimraf": "^2.5.4"
   },
   "engines": {
@@ -39,6 +41,7 @@
     "url": "git@github.com:pswai/git-sweep.git"
   },
   "scripts": {
+    "test": "jest",
     "build": "./node_modules/.bin/babel src --out-dir lib",
     "prepublish": "./node_modules/.bin/rimraf lib && npm run build"
   },
