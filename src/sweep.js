@@ -21,7 +21,7 @@ function isIgnored(ref, ignoreList) {
 
 function getCutoffMoment(age) {
   const [, year, month, day] = age.match(/(?:(\d+)y)?(?:(\d+)m)?(?:(\d+)d)?/);
-  
+
   return moment()
     .subtract(year, 'years')
     .subtract(month, 'months')
@@ -39,7 +39,7 @@ async function sweep({
   if (!path) {
     throw new Error('Path is required');
   }
-  
+
   try {
     const cutoffMoment = age ? getCutoffMoment(age) : null;
     const ignoreList = await getConfiguredIgnoresIfExist(path);

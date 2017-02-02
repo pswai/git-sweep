@@ -1,4 +1,5 @@
 import path from 'path';
+import moment from 'moment';
 
 jest.mock('fs');
 
@@ -50,25 +51,59 @@ describe('getConfiguredIgnoresIfExist', () => {
 });
 
 describe('getCutoffMoment', () => {
-  const mockMoment = {
-    subtract: jest.fn(() => mockMoment)
-  };
+  let currentMoment;
 
   beforeEach(() => {
-    jest.resetModules();
-
-    jest.mock('moment', () => () => mockMoment);
+    currentMoment = moment('2017-01-01T00:00:00+0000');
   });
 
-  it('parses `age` correctly', () => {
+  it('recognizes `y` token', () => {
     const util = require('../util');
 
-    util.getCutoffMoment('1y2m3d');
+    const cutoffMoment = util.getCutoffMoment(currentMoment, '1y');
 
-    expect(mockMoment.subtract.mock.calls).toEqual([
-      ['1', 'years'],
-      ['2', 'months'],
-      ['3', 'days']
-    ]);
+    expect(cutoffMoment).toMatchSnapshot();
+  });
+
+  it('recognizes `m` token', () => {
+    const util = require('../util');
+
+    const cutoffMoment = util.getCutoffMoment(currentMoment, '1m');
+
+    expect(cutoffMoment).toMatchSnapshot();
+  });
+
+  it('recognizes `d` token', () => {
+    const util = require('../util');
+
+    const cutoffMoment = util.getCutoffMoment(currentMoment, '1d');
+
+    expect(cutoffMoment).toMatchSnapshot();
+  });
+
+  it('gives correct cutoff moment for various combinations', () => {
+    const util = require('../util');
+
+    expect(util.getCutoffMoment(currentMoment, '1y2m3d')).toMatchSnapshot();
+    expect(util.getCutoffMoment(currentMoment, '1y3d')).toMatchSnapshot();
+    expect(util.getCutoffMoment(currentMoment, '2m3d')).toMatchSnapshot();
+    expect(util.getCutoffMoment(currentMoment, '1y2m')).toMatchSnapshot();
+  });
+});
+
+describe('isIgnored', () => {
+  it('works when ignoreList is empty', () => {
+    const util = require('../util');
+
+    expect(util.isIgnored('refs/remotes/origin/dev', [])).toBe(false);
+  });
+
+  it('checks whether a ref is in ignoredList', () => {
+    const util = require('../util');
+
+    const list = ['origin/dev'];
+
+    expect(util.isIgnored('refs/remotes/origin/dev', list)).toBe(true);
+    expect(util.isIgnored('refs/remotes/origin/feature', list)).toBe(false);
   });
 });

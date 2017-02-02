@@ -29,11 +29,15 @@ export function getConfiguredIgnoresIfExist(repoPath) {
   });
 }
 
-export function getCutoffMoment(age) {
+export function getCutoffMoment(currentMoment, age) {
   const [, year, month, day] = age.match(/(?:(\d+)y)?(?:(\d+)m)?(?:(\d+)d)?/);
 
-  return moment()
+  return moment(currentMoment)
     .subtract(year, 'years')
     .subtract(month, 'months')
     .subtract(day, 'days');
+}
+
+export function isIgnored(ref, ignoreList) {
+  return ignoreList.includes(ref.replace(/^refs\/remotes\//, ''));
 }
