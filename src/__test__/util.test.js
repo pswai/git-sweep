@@ -50,14 +50,14 @@ describe('getConfiguredIgnoresIfExist', () => {
 });
 
 describe('getCutoffMoment', () => {
-  const momentMock = {
-    subtract: jest.fn(() => momentMock)
+  const mockMoment = {
+    subtract: jest.fn(() => mockMoment)
   };
 
   beforeEach(() => {
     jest.resetModules();
 
-    jest.mock('moment', () => () => momentMock);
+    jest.mock('moment', () => () => mockMoment);
   });
 
   it('parses `age` correctly', () => {
@@ -65,7 +65,7 @@ describe('getCutoffMoment', () => {
 
     util.getCutoffMoment('1y2m3d');
 
-    expect(momentMock.subtract.mock.calls).toEqual([
+    expect(mockMoment.subtract.mock.calls).toEqual([
       ['1', 'years'],
       ['2', 'months'],
       ['3', 'days']
