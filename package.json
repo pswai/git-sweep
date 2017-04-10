@@ -43,7 +43,7 @@
   "scripts": {
     "test": "jest",
     "test-watch": "jest --watchAll",
-    "build": "./node_modules/.bin/babel src --out-dir lib",
+    "build": "./node_modules/.bin/babel src --out-dir lib --ignore __test__/**,__mocks__/**",
     "prepublish": "./node_modules/.bin/rimraf lib && npm run build"
   },
   "author": "Wai Park Soon <parksoon_my@hotmail.com>",
