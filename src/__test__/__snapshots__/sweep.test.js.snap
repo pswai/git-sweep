@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sweep removes remote branches that are older than a month 1`] = `
+Array [
+  "refs/remotes/origin/new-branch",
+]
+`;

@@ -8,13 +8,14 @@ describe('getConfiguredIgnoresIfExist', () => {
     jest.resetModules();
   });
 
-  it('rejects when `repoPath` is missing', async () => {
+  it('rejects when `repoPath` is missing', async done => {
     const util = require('../util');
 
     try {
       await util.getConfiguredIgnoresIfExist()
     } catch (e) {
       expect(e.message).toEqual('`repoPath` is required');
+      done();
     }
   });
 
