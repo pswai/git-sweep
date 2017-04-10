@@ -30,7 +30,7 @@
     "babel-core": "^6.22.1",
     "babel-jest": "^18.0.0",
     "babel-preset-env": "^1.1.8",
-    "jest": "^18.1.0",
+    "jest": "^19.0.2",
     "rimraf": "^2.5.4"
   },
   "engines": {
@@ -42,7 +42,7 @@
   },
   "scripts": {
     "test": "jest",
-    "test-watch": "jest --watch",
+    "test-watch": "jest --watchAll",
     "build": "./node_modules/.bin/babel src --out-dir lib",
     "prepublish": "./node_modules/.bin/rimraf lib && npm run build"
   },
