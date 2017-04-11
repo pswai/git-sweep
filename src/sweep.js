@@ -43,7 +43,7 @@ async function sweep({
   try {
     const cutoffMoment = age ? getCutoffMoment(age) : null;
     const ignoreList = await getConfiguredIgnoresIfExist(path);
-    ignoreList.push(...ignore);
+    ignoreList.push(...(ignore.split(',')));
 
     const repo = await NodeGit.Repository.open(path);
 

@@ -1,7 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`sweep removes remote branches that are older than a month 1`] = `
+exports[`sweep with \`age\` removes remote branches that are older than a month by default 1`] = `
 Array [
+  "refs/remotes/origin/one-month-branch",
   "refs/remotes/origin/new-branch",
+]
+`;
+
+exports[`sweep with \`age\` removes remote branches that are older than specified age 1`] = `
+Array [
+  "refs/remotes/origin/almost-old-branch",
+  "refs/remotes/origin/new-branch",
+]
+`;
+
+exports[`sweep with \`ignore\` ignores branches specified 1`] = `
+Array [
+  "refs/remotes/origin/feature-branch",
+]
+`;
+
+exports[`sweep with \`ignore\` ignores multiple branches delimited by comma 1`] = `
+Array [
+  "refs/remotes/origin/dev",
+  "refs/remotes/origin/master",
+]
+`;
+
+exports[`sweep with \`ignore\` ignores origin/master by default 1`] = `
+Array [
+  "refs/remotes/origin/master",
 ]
 `;
