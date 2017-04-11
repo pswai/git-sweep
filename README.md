@@ -1,4 +1,4 @@
-git-sweep [![npm version](https://badge.fury.io/js/git-sweep.svg)](https://badge.fury.io/js/git-sweep)
+git-sweep [![npm version](https://badge.fury.io/js/git-sweep.svg)](https://badge.fury.io/js/git-sweep) [![Build Status](https://travis-ci.org/pswai/git-sweep.svg?branch=master)](https://travis-ci.org/pswai/git-sweep)
 ---------
 > Git utility to clean up remote branches
 
@@ -108,6 +108,10 @@ When used together with `--ignore`, their entries will be merged.
 
 
 ### Changelog
+
+#### v0.3.0
+- Upgrade NodeGit to v0.16.0
+- **BREAKING**: Drop Node 0.12.x support
 
 #### v0.2.0
 - Fix EOL issue in OS X
