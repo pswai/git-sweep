@@ -1,47 +1,67 @@
+import os from 'os';
+import path from 'path';
 import moment from 'moment';
 import NodeGit from 'nodegit';
 import * as util from './util';
 
+// Need a better way to find out which credential strategy to use.
+// Right now each strategy is attempted one by one.
+function getRemoteCallbacks(password) {
+  const authTrials = {
+    agent: false,
+    sshKeyNew: false,
+    userpassPlaintext: false
+  };
+
+  return {
+    certificateCheck: function() { return 1; },
+    credentials: function(url, username) {
+      // Do not try ssh-agent if password is specified
+      if (password) {
+        if (!authTrials.userpassPlaintext) {
+          authTrials.userpassPlaintext = true;
+          return NodeGit.Cred.userpassPlaintextNew(username, password);
+        }
+      } else if (!authTrials.agent) {
+        authTrials.agent = true;
+        return NodeGit.Cred.sshKeyFromAgent(username);
+      } else {
+        authTrials.sshKeyNew = true;
+
+        const home = os.homedir();
+        return NodeGit.Cred.sshKeyNew(
+          username,
+          path.resolve(home, '.ssh', 'id_rsa.pub'),
+          path.resolve(home, '.ssh', 'id_rsa'),
+          ''
+        );
+      }
+    }
+  };
+}
+
 export default async function sweep({
-  path,
+  repoPath,
   remote = 'origin',
   preview = false,
   ignore = 'origin/master',
   age = '1m',
   password
 }) {
-  if (!path) {
-    throw new Error('Path is required');
+  if (!repoPath) {
+    throw new Error('repoPath is required');
   }
 
   try {
     const currentMoment = moment();
     const cutoffMoment = age ? util.getCutoffMoment(currentMoment, age) : null;
-    const ignoreList = await util.getConfiguredIgnoresIfExist(path);
+    const ignoreList = await util.getConfiguredIgnoresIfExist(repoPath);
     ignoreList.push(...(ignore.split(',')));
 
-    const repo = await NodeGit.Repository.open(path);
+    const repo = await NodeGit.Repository.open(repoPath);
 
-    const authTrials = {
-      agent: false,
-      userpassPlaintext: false
-    };
     await repo.fetch(remote, {
-      callbacks: {
-        certificateCheck: function() { return 1; },
-        credentials: function(url, username) {
-          // Do not try ssh-agent if password is specified
-          if (password) {
-            if (!authTrials.userpassPlaintext) {
-              authTrials.userpassPlaintext = true;
-              return NodeGit.Cred.userpassPlaintextNew(username, password);
-            }
-          } else if (!authTrials.agent) {
-            authTrials.agent = true;
-            return NodeGit.Cred.sshKeyFromAgent(username);
-          }
-        }
-      },
+      callbacks: getRemoteCallbacks(password),
       prune: NodeGit.Fetch.PRUNE.GIT_FETCH_PRUNE
     });
 
@@ -70,28 +90,9 @@ export default async function sweep({
     }
 
     if (!preview) {
-      const authTrials = {
-        agent: false,
-        userpassPlaintext: false
-      };
-
       const theRemote = await repo.getRemote(remote);
       await theRemote.push(sweepRefs, {
-        callbacks: {
-          certificateCheck: function() { return 1; },
-          credentials: function(url, username) {
-            // Do not try ssh-agent if password is specified
-            if (password) {
-              if (!authTrials.userpassPlaintext) {
-                authTrials.userpassPlaintext = true;
-                return NodeGit.Cred.userpassPlaintextNew(username, password);
-              }
-            } else if (!authTrials.agent) {
-              authTrials.agent = true;
-              return NodeGit.Cred.sshKeyFromAgent(username);
-            }
-          }
-        }
+        callbacks: getRemoteCallbacks(password)
       });
 
       console.log(`${sweepRefs.length} branch removed`);

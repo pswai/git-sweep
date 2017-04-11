@@ -37,7 +37,7 @@ program
 
 function run(args) {
   sweep({
-    path: path,
+    repoPath: path,
     remote: args.remote,
     preview: args.preview,
     ignore: args.ignore,

@@ -23,7 +23,7 @@ describe('sweep', () => {
     try {
       await sweep({});
     } catch (e) {
-      expect(e.message).toEqual('Path is required');
+      expect(e.message).toEqual('repoPath is required');
       done();
     }
   });
@@ -50,7 +50,7 @@ describe('sweep', () => {
       });
 
       await sweep({
-        path: repoPath
+        repoPath
       });
 
       const referencesLeft = await git.__getMockRepo(repoPath).getReferenceNames();
@@ -81,7 +81,7 @@ describe('sweep', () => {
       });
 
       await sweep({
-        path: repoPath,
+        repoPath,
         age: '1y2m3d'
       });
 
@@ -109,7 +109,7 @@ describe('sweep', () => {
       });
 
       await sweep({
-        path: repoPath
+        repoPath
       });
 
       const referencesLeft = await git.__getMockRepo(repoPath).getReferenceNames();
@@ -134,7 +134,7 @@ describe('sweep', () => {
       });
 
       await sweep({
-        path: repoPath,
+        repoPath,
         ignore: 'origin/feature-branch'
       });
 
@@ -163,7 +163,7 @@ describe('sweep', () => {
       });
 
       await sweep({
-        path: repoPath,
+        repoPath,
         ignore: 'origin/master,origin/dev'
       });
 
@@ -203,7 +203,7 @@ describe('sweep', () => {
       });
 
       await sweep({
-        path: repoPath,
+        repoPath,
         ignore: 'origin/release'
       });
 
@@ -231,7 +231,7 @@ describe('sweep', () => {
       });
 
       await sweep({
-        path: repoPath,
+        repoPath,
         preview: true
       });
 
