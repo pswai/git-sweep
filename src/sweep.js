@@ -4,29 +4,28 @@ import moment from 'moment';
 import NodeGit from 'nodegit';
 import * as util from './util';
 
-// Need a better way to find out which credential strategy to use.
-// Right now each strategy is attempted one by one.
 function getRemoteCallbacks(password) {
-  const authTrials = {
-    agent: false,
-    sshKeyNew: false,
-    userpassPlaintext: false
-  };
+  const {
+    USERPASS_PLAINTEXT,
+    SSH_KEY,
+    SSH_CUSTOM
+  } = NodeGit.Cred.TYPE;
+
+  // Cred types not supported:
+  // - Cred.TYPE.SSH_MEMORY
+  // - Cred.TYPE.USERNAME
+  // - Cred.TYPE.SSH_INTERACTIVE
+  // - Cred.TYPE.DEFAULT
+  const supportedTypes = 0b0000111;
+  let attemptedTypes = 0b0000000;
 
   return {
     certificateCheck: function() { return 1; },
-    credentials: function(url, username) {
-      // Do not try ssh-agent if password is specified
-      if (password) {
-        if (!authTrials.userpassPlaintext) {
-          authTrials.userpassPlaintext = true;
-          return NodeGit.Cred.userpassPlaintextNew(username, password);
-        }
-      } else if (!authTrials.agent) {
-        authTrials.agent = true;
-        return NodeGit.Cred.sshKeyFromAgent(username);
-      } else {
-        authTrials.sshKeyNew = true;
+    credentials: function(url, username, allowedTypes) {
+      const possibleTypes = allowedTypes & (~attemptedTypes & supportedTypes);
+
+      if (possibleTypes & SSH_KEY) {
+        attemptedTypes |= SSH_KEY;
 
         const home = os.homedir();
         return NodeGit.Cred.sshKeyNew(
@@ -35,6 +34,14 @@ function getRemoteCallbacks(password) {
           path.resolve(home, '.ssh', 'id_rsa'),
           ''
         );
+      } else if (password && (possibleTypes & USERPASS_PLAINTEXT)) {
+        attemptedTypes |= USERPASS_PLAINTEXT;
+
+        return NodeGit.Cred.userpassPlaintextNew(username, password);
+      } else if (possibleTypes & SSH_CUSTOM) {
+        attemptedTypes |= SSH_CUSTOM;
+
+        return NodeGit.Cred.sshKeyFromAgent(username);
       }
     }
   };

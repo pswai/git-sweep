@@ -92,7 +92,16 @@ class Commit {
 const git = {
   Cred: {
     userpassPlaintextNew: jest.fn(),
-    sshKeyFromAgent: jest.fn()
+    sshKeyFromAgent: jest.fn(),
+    TYPE: {
+      USERPASS_PLAINTEXT: 1,
+      SSH_KEY: 2,
+      SSH_CUSTOM: 4,
+      DEFAULT: 8,
+      SSH_INTERACTIVE: 16,
+      USERNAME: 32,
+      SSH_MEMORY: 64
+    }
   },
   Fetch: {
     // These are the actual ones
