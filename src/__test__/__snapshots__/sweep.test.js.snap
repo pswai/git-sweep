@@ -20,6 +20,14 @@ Array [
 ]
 `;
 
+exports[`sweep with \`ignore\` ignores branches specified in \`.gitsweepignore\` together 1`] = `
+Array [
+  "refs/remotes/origin/release",
+  "refs/remotes/origin/dev",
+  "refs/remotes/origin/master",
+]
+`;
+
 exports[`sweep with \`ignore\` ignores multiple branches delimited by comma 1`] = `
 Array [
   "refs/remotes/origin/dev",

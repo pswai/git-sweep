@@ -2,6 +2,7 @@ import lolex from 'lolex';
 import moment from 'moment';
 
 jest.mock('nodegit');
+jest.mock('fs');
 
 describe('sweep', () => {
   let clock;
@@ -164,6 +165,46 @@ describe('sweep', () => {
       await sweep({
         path: repoPath,
         ignore: 'origin/master,origin/dev'
+      });
+
+      const referencesLeft = await git.__getMockRepo(repoPath).getReferenceNames();
+      expect(referencesLeft).toMatchSnapshot();
+    });
+
+    it('ignores branches specified in `.gitsweepignore` together', async () => {
+      const git = require('nodegit');
+      const fs = require('fs');
+      const path = require('path');
+      const sweep = require('../sweep').default;
+      const repoPath = '/path/to/repo';
+
+      git.__setMockRepo(repoPath, {
+        remoteBranches: {
+          origin: [{
+            name: 'feature-branch',
+            lastUpdated: moment().subtract(2, 'month').toDate()
+          }, {
+            name: 'release',
+            lastUpdated: moment().subtract(2, 'month').toDate()
+          }, {
+            name: 'dev',
+            lastUpdated: moment().subtract(2, 'month').toDate()
+          }, {
+            name: 'master',
+            lastUpdated: moment().subtract(2, 'month').toDate()
+          }]
+        }
+      });
+      fs.__setMockFiles({
+        [path.join(repoPath, '.gitsweepignore')]: `
+          origin/master
+          origin/dev
+        `
+      });
+
+      await sweep({
+        path: repoPath,
+        ignore: 'origin/release'
       });
 
       const referencesLeft = await git.__getMockRepo(repoPath).getReferenceNames();

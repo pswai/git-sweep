@@ -1,34 +1,8 @@
-import fs from 'fs';
-import path from 'path';
 import moment from 'moment';
 import NodeGit from 'nodegit';
+import * as util from './util';
 
-function getConfiguredIgnoresIfExist(repoPath) {
-  return new Promise((resolve) => {
-    fs.readFile(path.join(repoPath, '.gitsweepignore'), 'utf8', (err, data) => {
-      if (err) {
-        return resolve([]);
-      }
-
-      resolve(data.split('\n'));
-    })
-  });
-}
-
-function isIgnored(ref, ignoreList) {
-  return ignoreList.includes(ref.replace(/^refs\/remotes\//, ''));
-}
-
-function getCutoffMoment(age) {
-  const [, year, month, day] = age.match(/(?:(\d+)y)?(?:(\d+)m)?(?:(\d+)d)?/);
-
-  return moment()
-    .subtract(year, 'years')
-    .subtract(month, 'months')
-    .subtract(day, 'days');
-}
-
-async function sweep({
+export default async function sweep({
   path,
   remote = 'origin',
   preview = false,
@@ -41,8 +15,9 @@ async function sweep({
   }
 
   try {
-    const cutoffMoment = age ? getCutoffMoment(age) : null;
-    const ignoreList = await getConfiguredIgnoresIfExist(path);
+    const currentMoment = moment();
+    const cutoffMoment = age ? util.getCutoffMoment(currentMoment, age) : null;
+    const ignoreList = await util.getConfiguredIgnoresIfExist(path);
     ignoreList.push(...(ignore.split(',')));
 
     const repo = await NodeGit.Repository.open(path);
@@ -74,7 +49,7 @@ async function sweep({
     const sweepRefs = [];
 
     for (const ref of refNames) {
-      if (ref.startsWith(`refs/remotes/${remote}`) && !isIgnored(ref, ignoreList)) {
+      if (ref.startsWith(`refs/remotes/${remote}`) && !util.isIgnored(ref, ignoreList)) {
         const commit = await repo.getReferenceCommit(ref);
         const commitMoment = moment(commit.date());
 
@@ -125,5 +100,3 @@ async function sweep({
     console.error(e.message);
   }
 }
-
-export default sweep;
