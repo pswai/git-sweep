@@ -2,6 +2,7 @@ import os from 'os';
 import path from 'path';
 import moment from 'moment';
 import NodeGit from 'nodegit';
+import readlineSync from 'readline-sync';
 import * as util from './util';
 
 function getRemoteCallbacks(password) {
@@ -34,16 +35,29 @@ function getRemoteCallbacks(password) {
           path.resolve(home, '.ssh', 'id_rsa'),
           ''
         );
-      } else if (password && (possibleTypes & USERPASS_PLAINTEXT)) {
-        attemptedTypes |= USERPASS_PLAINTEXT;
-
-        return NodeGit.Cred.userpassPlaintextNew(username, password);
       } else if (possibleTypes & SSH_CUSTOM) {
         attemptedTypes |= SSH_CUSTOM;
-
         return NodeGit.Cred.sshKeyFromAgent(username);
+
       } else if (possibleTypes & DEFAULT) {
+        attemptedTypes |= DEFAULT;
         return NodeGit.Cred.defaultNew();
+
+      } else if (possibleTypes & USERPASS_PLAINTEXT) {
+        attemptedTypes |= USERPASS_PLAINTEXT;
+
+        if (!username) {
+          username = readlineSync.question('Enter your git username: ');
+        }
+
+        if (!password) {
+          password = readlineSync.question('Enter your git password: ', {
+            hideEchoBack: true,
+            mask: ''
+          });
+        }
+
+        return NodeGit.Cred.userpassPlaintextNew(username, password);
       } else {
         throw new Error('No supported credential type found. Supported types are USERPASS_PLAINTEXT, SSH_KEY, SSH_CUSTOM, DEFAULT');
       }

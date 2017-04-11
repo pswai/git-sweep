@@ -1,5 +1,5 @@
 import 'babel-polyfill';
-import {Command} from 'commander';
+import { Command } from 'commander';
 import readlineSync from 'readline-sync';
 import sweep from './sweep';
 import pkg from '../package.json';
