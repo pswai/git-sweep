@@ -8,15 +8,15 @@ function getRemoteCallbacks(password) {
   const {
     USERPASS_PLAINTEXT,
     SSH_KEY,
-    SSH_CUSTOM
+    SSH_CUSTOM,
+    DEFAULT
   } = NodeGit.Cred.TYPE;
 
   // Cred types not supported:
   // - Cred.TYPE.SSH_MEMORY
   // - Cred.TYPE.USERNAME
   // - Cred.TYPE.SSH_INTERACTIVE
-  // - Cred.TYPE.DEFAULT
-  const supportedTypes = 0b0000111;
+  const supportedTypes = 0b0001111;
   let attemptedTypes = 0b0000000;
 
   return {
@@ -42,6 +42,10 @@ function getRemoteCallbacks(password) {
         attemptedTypes |= SSH_CUSTOM;
 
         return NodeGit.Cred.sshKeyFromAgent(username);
+      } else if (possibleTypes & DEFAULT) {
+        return NodeGit.Cred.defaultNew();
+      } else {
+        throw new Error('No supported credential type found. Supported types are USERPASS_PLAINTEXT, SSH_KEY, SSH_CUSTOM, DEFAULT');
       }
     }
   };
