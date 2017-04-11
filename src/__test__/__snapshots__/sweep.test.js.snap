@@ -40,3 +40,10 @@ Array [
   "refs/remotes/origin/master",
 ]
 `;
+
+exports[`sweep with \`preview\` does not remove any remote branches 1`] = `
+Array [
+  "refs/remotes/origin/feature-branch",
+  "refs/remotes/origin/master",
+]
+`;

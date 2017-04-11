@@ -211,5 +211,33 @@ describe('sweep', () => {
       expect(referencesLeft).toMatchSnapshot();
     });
   });
+
+  describe('with `preview`', () => {
+    it('does not remove any remote branches', async () => {
+      const sweep = require('../sweep').default;
+      const git = require('nodegit');
+      const repoPath = '/path/to/repo';
+
+      git.__setMockRepo(repoPath, {
+        remoteBranches: {
+          origin: [{
+            name: 'feature-branch',
+            lastUpdated: moment().subtract(2, 'month').toDate()
+          }, {
+            name: 'master',
+            lastUpdated: moment().subtract(2, 'month').toDate()
+          }]
+        }
+      });
+
+      await sweep({
+        path: repoPath,
+        preview: true
+      });
+
+      const referencesLeft = await git.__getMockRepo(repoPath).getReferenceNames();
+      expect(referencesLeft).toMatchSnapshot();
+    });
+  });
 });
 
