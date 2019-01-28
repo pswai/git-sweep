@@ -1,9 +1,9 @@
-git-sweep [![npm version](https://badge.fury.io/js/git-sweep.svg)](https://badge.fury.io/js/git-sweep)
----------
+## git-sweep [![npm version](https://badge.fury.io/js/git-sweep.svg)](https://badge.fury.io/js/git-sweep)
+
 > Git utility to clean up remote branches
 
-
 ### Install
+
 ```
 npm install -g git-sweep
 ```
@@ -53,45 +53,49 @@ Minimum age for a branch to be considered for deletion. Format `1y2m3d` means "o
 
 Type: `Boolean`
 
-
 ### Example Usage
 
 #### Delete remote branches that are older than 1 month except `origin/master`
+
 ```
 git-sweep /path/to/repo
 ```
 
 #### Delete older than 1 year, 2 month and 3 days
+
 ```
 git-sweep /path/to/repo --age 1y2m3d
 ```
 
 #### Delete except `origin/master` and `origin/dev`
+
 ```
 git-sweep /path/to/repo --ignore origin/master,origin/dev
 ```
 
 #### Delete from another remote
+
 ```
 git-sweep /path/to/repo --remote fork
 ```
 
 #### Dry run
+
 ```
 git-sweep /path/to/repo --preview
 ```
 
-
 ### Config file
+
 A `.gitsweepignore` can be added to configure the `ignore` option.
 When used together with `--ignore`, their entries will be merged.
 
-
 ### Authentication
+
 `git-sweep` currently supports `ssh-agent` only.
 
-
 ### Roadmap
+
 - Authentication methods
   - [x] username/password
   - HTTPS
@@ -102,26 +106,38 @@ When used together with `--ignore`, their entries will be merged.
   - Cutoff date (similar to age)
 - [x] CLI help
 
-
 ### License
-[MIT](LICENSE)
 
+[MIT](LICENSE)
 
 ### Changelog
 
+#### v0.4.0
+
+- Upgrade NodeGit to v0.24.0
+
+#### v0.3.0
+
+- Upgrade NodeGit to v0.16.0
+
 #### v0.2.0
+
 - Fix EOL issue in OS X
 - Changed `path` to be mandatory
 
 #### v0.1.3
+
 - Fix missing auth callbacks when actual push
 
 #### v0.1.2
+
 - Add support to authenticate using password
 - Add CLI help
 
 #### v0.1.1
+
 - Add support to authenticate using `ssh-agent`
 
 #### v0.1.0
+
 - First release
